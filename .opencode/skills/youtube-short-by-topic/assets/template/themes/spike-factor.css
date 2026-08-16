@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme — The Spike Factor brand
+
+   Pulled from thespikefactor.com's own Tailwind config: warm
+   cream page, charcoal-navy ink, pumpkin-orange primary accent,
+   golden secondary accent, white-cream cards with a hairline
+   border — and a dark navy code slab (matching brand-900) rather
+   than a neutral near-black one, so it stays in the same hue
+   family as the ink.
+
+   Appended after the format stylesheet, so everything here wins
+   on cascade order without touching the base.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── paper (warmcream / raisedlight / surfacelight) ── */
+  --paper:     #f6f1e6;
+  --shell:     #ede6d6;
+  --surface:   #fffdf7;
+
+  /* ── ink (charcoal / brand scale) ── */
+  --lt-ink:    #233d4d;
+  --lt-ink-2:  #33596a;
+  --lt-muted:  #6b7c87;
+  --lt-faint:  #95aab7;
+
+  /* ── rules (borderlight, darkened for a second hairline) ── */
+  --lt-line:   #d9cfbb;
+  --lt-line-2: #cbbe9e;
+
+  /* ── accents (pumpkin / golden) ── */
+  --lt-acc:      #fe7f2d;
+  --lt-acc-soft: #fff0e8;
+  --lt-acc-line: #fdc3a3;
+  --lt-gold:      #fcca46;
+  --lt-gold-soft: #fffae8;
+
+  /* ── the dark code slab, kept in the brand's navy hue ── */
+  --code-bg:   #13232d;
+  --code-ink:  #f6f1e6;
+
+  --lt-shadow:    0 1px 2px rgba(35, 61, 77, .06), 0 6px 20px -8px rgba(35, 61, 77, .14);
+  --lt-shadow-lg: 0 2px 4px rgba(35, 61, 77, .06), 0 18px 44px -16px rgba(35, 61, 77, .22);
+
+  /* ── mapped onto the deck's roles ── */
+  --bg:      var(--paper);
+  --bg-2:    var(--shell);
+  --ink:     var(--lt-ink);
+  --ink-dim: var(--lt-muted);
+  --line:    var(--lt-line);
+  --card:    var(--surface);
+  --acc:     var(--lt-acc);
+  --acc-2:   var(--lt-gold);
+}
+
+/* ── stage: full-bleed paper ─────────────────────────────── */
+.stage {
+  background: var(--paper);
+  color: var(--lt-ink);
+}
+
+/* vignette, behind the content */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(92% 68% at 50% 0%, transparent 55%, rgba(35, 61, 77, .06) 100%);
+  pointer-events: none;
+}
+
+/* the paper grid */
+.stage::after {
+  background-image:
+    linear-gradient(var(--lt-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lt-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: .55;
+}
+
+/* z-index ONLY — these are already absolutely positioned by the base
+   sheet, and re-declaring position knocks the captions out of their
+   bottom-anchored slot. */
+.scene, .ticks, .brand, .captions { z-index: 2; }
+
+/* ── type ────────────────────────────────────────────────── */
+.kicker { color: var(--lt-acc); }
+.kicker::before { background: var(--lt-acc); }
+
+h1, h2 { color: var(--lt-ink); letter-spacing: -.03em; }
+
+/* Solid pumpkin-orange for emphasis, matching the site's own
+   accent-colored-word treatment rather than a gradient. */
+.grad {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+
+.sub { color: var(--lt-muted); }
+
+/* ── cards ───────────────────────────────────────────────── */
+.item,
+.col {
+  background: var(--surface);
+  border: 1px solid var(--lt-line);
+  box-shadow: var(--lt-shadow);
+  color: var(--lt-ink);
+}
+.item { border-left: 3px solid var(--lt-acc); }
+
+.item .dot { background: var(--lt-acc); box-shadow: none; }
+
+.item code {
+  color: var(--lt-ink);
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+}
+
+.item--step .num {
+  background: var(--lt-acc-soft);
+  border: 1px solid var(--lt-acc-line);
+  color: var(--lt-acc);
+  box-shadow: none;
+}
+
+/* ── the dark navy code slab ─────────────────────────────── */
+.code {
+  background: var(--code-bg);
+  border: 1px solid #1e3140;
+  box-shadow: var(--lt-shadow-lg);
+}
+.code-bar {
+  background: rgba(246, 241, 230, .06);
+  border-bottom: 1px solid rgba(246, 241, 230, .1);
+}
+.code-bar i { background: #2e4c60; }
+.code-bar span { color: #7f95a3; }
+.code pre { color: var(--code-ink); }
+
+/* warm syntax roles, tuned for #13232d */
+.code .c-dim { color: #7f95a3; }   /* comment */
+.code .c-acc { color: #fe9c5c; }   /* prompt  */
+.code .c-key { color: #fcca46; }   /* flag    */
+.code .c-str { color: #f0d99a; }   /* string  */
+
+/* ── compare: neutral left, golden right ─────────────────── */
+.col h3 { color: var(--lt-muted); }
+.col--good {
+  border-color: #f5deA0;
+  background: var(--lt-gold-soft);
+}
+.col--good h3 { color: #a88314; }
+.col li::marker { color: var(--lt-acc); }
+.col--good li::marker { color: #c69b1e; }
+
+/* ── stat / cta ──────────────────────────────────────────── */
+.stat .big {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+.stat .cap { color: var(--lt-muted); }
+
+.cta-pill {
+  background: var(--lt-acc);
+  color: #fff;
+  border: 1px solid var(--lt-acc);
+  box-shadow: var(--lt-shadow);
+}
+
+/* ── chrome ──────────────────────────────────────────────── */
+.tick { background: var(--lt-line-2); }
+.tick i { background: var(--lt-acc); }
+.brand { color: var(--lt-muted); }
+.brand .mark { background: var(--lt-acc); box-shadow: none; }
+
+/* ── captions ────────────────────────────────────────────── */
+.captions {
+  color: var(--lt-ink);
+  -webkit-text-stroke: 8px rgba(246, 241, 230, .96);
+  text-shadow:
+    0 2px 10px rgba(246, 241, 230, 1),
+    0 0 26px rgba(246, 241, 230, .95);
+}
+
+/* ── preview chrome ──────────────────────────────────────── */
+body { background: var(--shell); }
+.bar {
+  background: rgba(255, 253, 247, .94);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button {
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button:hover { background: var(--lt-line); }
+.bar .t { color: var(--lt-muted); }
+
+.gate { background: rgba(237, 230, 214, .86); }
+.gate button { background: var(--lt-acc); color: #fff; }

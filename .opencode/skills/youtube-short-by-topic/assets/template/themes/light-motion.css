@@ -1,0 +1,316 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme — light · motion
+
+   `light-theme`'s warm-paper palette, plus a motion layer:
+
+   1. Per-element entrance curves. The base sheet gives every
+      revealable element one animation (`reveal`, .55s, paused and
+      frozen by app.js with a negative delay). This theme only
+      swaps `animation-name` per selector — duration, easing, fill
+      and play-state are inherited untouched, so the frame-exact
+      freeze in render mode keeps working. Custom keyframes must
+      therefore stay within the base's .55s window.
+
+   2. Ambient wall-clock drift — orbs behind the paper and a slow
+      grid pan. These are NOT seek-frozen, so cycles are long
+      (30–70s) and amplitudes small: at capture rate the motion
+      advances roughly in real time, and anything fast enough to
+      show sampling jitter is avoided on purpose.
+
+   Appended after the format stylesheet, so everything here wins
+   on cascade order without touching the base.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── paper ── */
+  --paper:     #faf9f7;
+  --shell:     #f1efeb;
+  --surface:   #ffffff;
+
+  /* ── ink ── */
+  --lt-ink:    #16181d;
+  --lt-ink-2:  #3d434e;
+  --lt-muted:  #6a7280;
+  --lt-faint:  #9aa1ad;
+
+  /* ── rules ── */
+  --lt-line:   #e6e2dc;
+  --lt-line-2: #d8d3ca;
+
+  /* ── accents ── */
+  --lt-acc:      #c2410c;   /* burnt orange */
+  --lt-acc-soft: #fdf1e9;
+  --lt-acc-line: #f3c7a8;
+  --lt-teal:     #0f766e;
+  --lt-teal-soft:#eaf5f3;
+
+  /* ── the dark code slab ── */
+  --code-bg:   #1c1f26;
+  --code-ink:  #e6e3dd;
+
+  --lt-shadow:    0 1px 2px rgba(20, 22, 28, .04), 0 6px 20px -8px rgba(20, 22, 28, .10);
+  --lt-shadow-lg: 0 2px 4px rgba(20, 22, 28, .04), 0 18px 44px -16px rgba(20, 22, 28, .18);
+
+  /* ── mapped onto the deck's roles ── */
+  --bg:      var(--paper);
+  --bg-2:    var(--shell);
+  --ink:     var(--lt-ink);
+  --ink-dim: var(--lt-muted);
+  --line:    var(--lt-line);
+  --card:    var(--surface);
+  --acc:     var(--lt-acc);
+  --acc-2:   var(--lt-teal);
+}
+
+/* ── stage: paper, with two drifting colour orbs ─────────── */
+.stage {
+  background: var(--paper);
+  color: var(--lt-ink);
+  overflow: hidden;
+}
+
+/* Orbs + vignette in one layer, behind the content. Blurred wide
+   and low-opacity so they read as warmth on the page rather than
+   as shapes — and so the slow drift never bands. */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  background:
+    radial-gradient(38% 26% at 18% 12%, rgba(194, 65, 12, .16), transparent 70%),
+    radial-gradient(34% 24% at 86% 78%, rgba(15, 118, 110, .14), transparent 72%),
+    radial-gradient(30% 20% at 72% 22%, rgba(240, 140, 80, .10), transparent 74%);
+  filter: blur(30px);
+  animation: drift 34s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes drift {
+  from { transform: translate3d(-2.2%, -1.6%, 0) scale(1.00); }
+  to   { transform: translate3d( 2.2%,  1.8%, 0) scale(1.07); }
+}
+
+/* the paper grid, panning one cell over a long cycle */
+.stage::after {
+  background-image:
+    linear-gradient(var(--lt-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lt-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: .5;
+  animation: pan 70s linear infinite;
+}
+
+@keyframes pan {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 64px 64px, 64px 64px; }
+}
+
+/* z-index ONLY — these are already absolutely positioned by the base
+   sheet, and re-declaring position knocks the captions out of their
+   bottom-anchored slot. */
+.scene, .ticks, .brand, .captions { z-index: 2; }
+
+/* ═══ entrance curves ═══════════════════════════════════════
+   Name-only overrides. Never restate duration/easing/fill here:
+   app.js parks each animation at `-Ns` and the cap is the base's
+   .55s, so a longer animation would freeze mid-way and never
+   finish on screen. */
+
+/* headline: rises with a slight overshoot in the letter-spacing,
+   which reads as the words settling into place */
+h1.r, h2.r { animation-name: settle; }
+@keyframes settle {
+  from { opacity: 0; transform: translateY(26px); letter-spacing: -.06em; }
+  to   { opacity: 1; transform: none;             letter-spacing: -.03em; }
+}
+
+/* kicker: the rule draws out from the left */
+.kicker.r { animation-name: kickIn; }
+@keyframes kickIn {
+  from { opacity: 0; transform: translateX(-26px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* cards deal in from the left with a touch of depth */
+.item.r { animation-name: dealIn; transform-origin: left center; }
+@keyframes dealIn {
+  from { opacity: 0; transform: translateX(-56px) scale(.965); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* an accent wipe runs down the card's left edge as it lands */
+.item { position: relative; overflow: hidden; }
+.item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--lt-acc);
+  transform-origin: top center;
+  animation: wipe .55s cubic-bezier(.22, 1, .36, 1) both;
+  /* Both inherited from .item: app.js writes the negative delay inline
+     on the card, and `.r` supplies paused/running. Without the delay
+     the wipe would freeze at scaleY(0) in render mode and never show. */
+  animation-delay: inherit;
+  animation-play-state: inherit;
+}
+@keyframes wipe {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* compare columns lift in, right column a hair softer */
+.col.r { animation-name: liftIn; }
+@keyframes liftIn {
+  from { opacity: 0; transform: translateY(34px) scale(.975); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* the code slab pops rather than slides — it is the scene's subject */
+.code.r { animation-name: popIn; transform-origin: center top; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.93) translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* the stat number scales up from small — the one place a big move earns its keep */
+.stat.r { animation-name: countUp; }
+@keyframes countUp {
+  from { opacity: 0; transform: scale(.55); }
+  60%  { opacity: 1; transform: scale(1.06); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* the pill lands last and bounces once */
+.cta-pill.r { animation-name: pillIn; }
+@keyframes pillIn {
+  from { opacity: 0; transform: translateY(26px) scale(.9); }
+  65%  { opacity: 1; transform: translateY(0) scale(1.05); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── type ────────────────────────────────────────────────── */
+.kicker { color: var(--lt-acc); }
+.kicker::before { background: var(--lt-acc); }
+
+h1, h2 { color: var(--lt-ink); letter-spacing: -.03em; }
+
+/* No gradient type on paper — accent-coloured words carry emphasis,
+   so `*stars*` render as solid burnt orange. */
+.grad {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+
+.sub { color: var(--lt-muted); }
+
+/* ── cards ───────────────────────────────────────────────── */
+.item,
+.col {
+  background: var(--surface);
+  border: 1px solid var(--lt-line);
+  box-shadow: var(--lt-shadow);
+  color: var(--lt-ink);
+}
+/* the left edge is drawn by .item::before above, so the border
+   itself stays hairline */
+.item { border-left: 1px solid var(--lt-line); padding-left: 43px; }
+
+.item .dot { background: var(--lt-acc); box-shadow: none; }
+
+.item code {
+  color: var(--lt-ink);
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+}
+
+/* numbered steps */
+.item--step .num {
+  background: var(--lt-acc-soft);
+  border: 1px solid var(--lt-acc-line);
+  color: var(--lt-acc);
+  box-shadow: none;
+}
+
+/* ── the dark code slab ──────────────────────────────────── */
+.code {
+  background: var(--code-bg);
+  border: 1px solid #2a2e37;
+  box-shadow: var(--lt-shadow-lg);
+}
+.code-bar {
+  background: rgba(255, 255, 255, .045);
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+}
+.code-bar i { background: #3a3f4a; }
+.code-bar span { color: #8d95a3; }
+.code pre { color: var(--code-ink); }
+
+.code .c-dim { color: #767e8c; }
+.code .c-acc { color: #f08c50; }
+.code .c-key { color: #8fd0c4; }
+.code .c-str { color: #d9c589; }
+
+/* ── compare: neutral left, teal right ───────────────────── */
+.col h3 { color: var(--lt-muted); }
+.col--good {
+  border-color: #bcdcd6;
+  background: var(--lt-teal-soft);
+}
+.col--good h3 { color: var(--lt-teal); }
+.col li::marker { color: var(--lt-acc); }
+.col--good li::marker { color: var(--lt-teal); }
+
+/* ── stat / cta ──────────────────────────────────────────── */
+.stat .big {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+.stat .cap { color: var(--lt-muted); }
+
+.cta-pill {
+  background: var(--lt-acc);
+  color: #fff;
+  border: 1px solid var(--lt-acc);
+  box-shadow: var(--lt-shadow);
+}
+
+/* ── chrome ──────────────────────────────────────────────── */
+.tick { background: var(--lt-line-2); }
+.tick i { background: var(--lt-acc); }
+.brand { color: var(--lt-muted); }
+.brand .mark { background: var(--lt-acc); box-shadow: none; }
+
+/* ── captions ────────────────────────────────────────────── */
+/* Dark ink with a paper-coloured stroke: has to stay legible over
+   the page, over white cards, and over the dark code slab. */
+.captions {
+  color: var(--lt-ink);
+  -webkit-text-stroke: 8px rgba(250, 249, 247, .96);
+  text-shadow:
+    0 2px 10px rgba(250, 249, 247, 1),
+    0 0 26px rgba(250, 249, 247, .95);
+}
+
+/* ── preview chrome ──────────────────────────────────────── */
+body { background: var(--shell); }
+.bar {
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button {
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button:hover { background: var(--lt-line); }
+.bar .t { color: var(--lt-muted); }
+
+.gate { background: rgba(241, 239, 235, .86); }
+.gate button { background: var(--lt-acc); color: #fff; }

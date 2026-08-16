@@ -1,0 +1,198 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme — Night Owl · glassmorphism
+
+   Palette lifted verbatim from OpenCode's own nightowl theme
+   (packages/tui/src/theme/assets/nightowl.json). Surfaces are
+   frosted glass: translucent fills over blurred colour orbs,
+   a hairline top highlight, and backdrop blur.
+
+   Appended after the format stylesheet, so everything here
+   wins on cascade order without touching the base.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Night Owl defs ── */
+  --no-bg:         #011627;
+  --no-panel:      #0b253a;
+  --no-fg:         #d6deeb;
+  --no-blue:       #82aaff;
+  --no-cyan:       #7fdbca;
+  --no-green:      #c5e478;
+  --no-yellow:     #ecc48d;
+  --no-orange:     #f78c6c;
+  --no-red:        #ef5350;
+  --no-pink:       #ff5874;
+  --no-purple:     #c792ea;
+  --no-muted:      #5f7e97;
+  --no-gray:       #637777;
+  --no-light-gray: #89a4bb;
+
+  /* ── mapped to the deck's roles ── */
+  --bg:      var(--no-bg);
+  --bg-2:    var(--no-panel);
+  --ink:     var(--no-fg);
+  --ink-dim: var(--no-light-gray);
+  --acc:     var(--no-blue);     /* primary   */
+  --acc-2:   var(--no-purple);   /* accent    */
+
+  /* ── glass tokens ── */
+  --glass:        rgba(130, 170, 255, .07);
+  --glass-strong: rgba(11, 37, 58, .55);
+  --glass-line:   rgba(214, 222, 235, .16);
+  --glass-top:    rgba(214, 222, 235, .28);
+  --glass-blur:   blur(22px) saturate(150%);
+}
+
+/* ── stage: deep navy, no gradient wash ─────────────────── */
+.stage {
+  background: var(--no-bg);
+  color: var(--ink);
+}
+
+/* Colour orbs — the thing the glass actually refracts.
+   Without something soft behind them, backdrop-filter has
+   nothing to blur and the panels read as flat grey. */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  background:
+    radial-gradient(46% 56% at 10% 4%,   rgba(130, 170, 255, .70), transparent 68%),
+    radial-gradient(42% 52% at 90% 12%,  rgba(199, 146, 234, .62), transparent 68%),
+    radial-gradient(48% 54% at 76% 96%,  rgba(127, 219, 202, .52), transparent 68%),
+    radial-gradient(38% 46% at 20% 92%,  rgba(247, 140, 108, .34), transparent 68%);
+  filter: blur(55px);
+  pointer-events: none;
+}
+
+/* keep the fine grid, tuned for navy, above the orbs */
+.stage::after {
+  background-image:
+    linear-gradient(rgba(214, 222, 235, .028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(214, 222, 235, .028) 1px, transparent 1px);
+  z-index: 1;
+}
+
+/* content sits above the orb layer.
+   z-index ONLY — these are already absolutely positioned by the base
+   sheet, and re-declaring position here knocks the captions out of
+   their bottom-anchored slot. */
+.scene, .ticks, .brand, .captions { z-index: 2; }
+
+/* ── glass surface, shared ──────────────────────────────── */
+.item,
+.col,
+.code,
+.stat,
+.cta-pill {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.item,
+.col {
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  box-shadow:
+    inset 0 1px 0 var(--glass-top),
+    0 18px 44px -26px rgba(1, 22, 39, .9);
+}
+.item { border-left: 3px solid var(--acc); }
+
+.item .dot { background: var(--no-cyan); box-shadow: 0 0 14px var(--no-cyan); }
+.item code {
+  color: var(--no-cyan);
+  background: rgba(127, 219, 202, .12);
+  border: 1px solid rgba(127, 219, 202, .22);
+}
+.item--step .num {
+  background: linear-gradient(140deg, var(--no-blue), var(--no-purple));
+  color: var(--no-bg);
+  box-shadow: 0 6px 20px -6px rgba(130, 170, 255, .8);
+}
+
+/* ── code panel ─────────────────────────────────────────── */
+.code {
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-line);
+  box-shadow:
+    inset 0 1px 0 var(--glass-top),
+    0 26px 60px -30px rgba(1, 22, 39, .95);
+}
+.code-bar {
+  background: rgba(214, 222, 235, .05);
+  border-bottom: 1px solid var(--glass-line);
+}
+.code-bar i { background: rgba(214, 222, 235, .18); }
+.code-bar span { color: var(--no-light-gray); }
+.code pre { color: var(--no-fg); }
+
+/* Night Owl syntax roles */
+.code .c-dim { color: var(--no-gray); }      /* comment  */
+.code .c-acc { color: var(--no-blue); }      /* prompt   */
+.code .c-key { color: var(--no-purple); }    /* keyword  */
+.code .c-str { color: var(--no-yellow); }    /* string   */
+
+/* ── type ───────────────────────────────────────────────── */
+.kicker { color: var(--no-cyan); }
+.kicker::before {
+  background: linear-gradient(90deg, var(--no-cyan), transparent);
+}
+.grad {
+  background: linear-gradient(105deg, var(--no-blue) 10%, var(--no-purple) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+h1, h2 { text-shadow: 0 8px 40px rgba(1, 22, 39, .6); }
+.sub { color: var(--no-light-gray); }
+
+.col--good { border-color: rgba(127, 219, 202, .34); }
+.col--good h3 { color: var(--no-cyan); }
+.col h3 { color: var(--no-light-gray); }
+.col li::marker { color: var(--no-blue); }
+
+/* ── chrome ─────────────────────────────────────────────── */
+.tick { background: rgba(214, 222, 235, .12); }
+.tick i { background: linear-gradient(90deg, var(--no-cyan), var(--no-blue)); }
+.brand .mark {
+  background: linear-gradient(140deg, var(--no-blue), var(--no-purple));
+  box-shadow: 0 0 22px -4px rgba(130, 170, 255, .9);
+}
+
+.cta-pill {
+  background: linear-gradient(105deg,
+    rgba(130, 170, 255, .92), rgba(199, 146, 234, .92));
+  color: var(--no-bg);
+  border: 1px solid var(--glass-top);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .4),
+    0 20px 50px -20px rgba(130, 170, 255, .8);
+}
+
+.stat .big {
+  background: linear-gradient(105deg, var(--no-cyan), var(--no-blue), var(--no-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── captions: readable over glass and orbs alike ───────── */
+.captions {
+  color: var(--no-fg);
+  -webkit-text-stroke: 7px rgba(1, 22, 39, .92);
+  text-shadow: 0 4px 24px rgba(1, 22, 39, 1);
+}
+
+/* ── preview chrome ─────────────────────────────────────── */
+.bar {
+  background: var(--glass-strong);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line);
+}
+.gate { background: rgba(1, 22, 39, .82); }
+.gate button {
+  background: linear-gradient(105deg, var(--no-blue), var(--no-purple));
+  color: var(--no-bg);
+}
