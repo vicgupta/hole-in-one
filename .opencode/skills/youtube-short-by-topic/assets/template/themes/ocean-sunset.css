@@ -1,0 +1,226 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme — ocean sunset
+
+   Prussian Blue / Deep Teal / Jasmine / Brick Ember / Blood Red.
+   A dark theme: Prussian Blue is the water and the sky, Deep Teal
+   is the cool half of the light, and the three warm tones sit on
+   the horizon — Jasmine as the sun itself, Brick Ember as the
+   band just under it, Blood Red as the afterglow below the line.
+
+   The five palette colours are declared verbatim below. Two tints
+   are derived from them, each for a stated legibility reason:
+   Brick Ember is too dark to set type in on Prussian Blue (about
+   2:1), and Deep Teal needs a small lift to serve as body-dim.
+   Nothing else is invented.
+
+   Appended after the format stylesheet, so everything here wins
+   on cascade order without touching the base.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── the palette, verbatim ── */
+  --prussian: #001427;
+  --teal:     #708D81;
+  --jasmine:  #F4D58D;
+  --ember:    #BF0603;
+  --blood:    #8D0801;
+
+  /* ── derived, for legibility on the dark ground ── */
+  /* Brick Ember lifted until type set in it clears ~4.5:1 on
+     Prussian Blue. Used only where the palette colour becomes
+     letterforms — gradients on headlines and the stat number. */
+  --ember-lit: #E2503F;
+  /* Deep Teal lifted for running dim text at 42px. */
+  --teal-lit:  #93AAA0;
+
+  /* ── deeper water, for slabs that must sit below the page ── */
+  --abyss:    #000B17;
+  --surface:  #052134;
+
+  /* ── mapped onto the deck's roles ── */
+  --bg:      var(--prussian);
+  --bg-2:    #002139;
+  --ink:     #F6EEDF;          /* warm paper white, tinted toward Jasmine */
+  --ink-dim: var(--teal-lit);
+  --line:    rgba(112, 141, 129, .26);
+  --card:    rgba(9, 38, 60, .74);   /* opaque enough that the sky doesn't read through the cards */
+  --acc:     var(--jasmine);
+  --acc-2:   var(--ember-lit);
+}
+
+/* ── stage: sun on the water ──────────────────────────────── */
+/* Read bottom-up: ocean, then the sky, then the ember band on the
+   horizon, then the sun's own glow sitting on top of it. */
+.stage {
+  background:
+    radial-gradient(1150px 620px at 50% 80%, rgba(244, 213, 141, .22), transparent 62%),
+    radial-gradient(1500px 520px at 50% 88%, rgba(191, 6, 3, .26),    transparent 66%),
+    radial-gradient(1100px 780px at 12% -10%, rgba(112, 141, 129, .16), transparent 62%),
+    radial-gradient(900px 700px at 100% 108%, rgba(141, 8, 1, .20),   transparent 64%),
+    linear-gradient(175deg, var(--bg-2), var(--prussian) 46%, var(--abyss));
+  color: var(--ink);
+}
+
+/* The horizon itself, plus the sun's column reflected down into the
+   water. It sits at 80% — below the scene's content band, because the
+   cards are translucent and a hard line higher up shows through them
+   and reads as a scratch rather than a horizon. Drifts on a long
+   cycle so the frame never sits perfectly still; slow enough that the
+   capture rate can't show sampling jitter. */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(to bottom,
+      transparent 79.6%,
+      rgba(244, 213, 141, .34) 79.9%,
+      rgba(244, 213, 141, .34) 80.2%,
+      transparent 80.5%),
+    radial-gradient(230px 300px at 50% 90%, rgba(244, 213, 141, .12), transparent 70%);
+  animation: tide 46s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes tide {
+  from { transform: translate3d(-1.1%, 0, 0) scale(1.00); opacity: .86; }
+  to   { transform: translate3d( 1.1%, 0, 0) scale(1.04); opacity: 1; }
+}
+
+/* the faint anti-banding grid, re-tinted from white to teal */
+.stage::after {
+  background-image:
+    linear-gradient(rgba(112, 141, 129, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(112, 141, 129, .05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* z-index ONLY — these are already absolutely positioned by the base
+   sheet, and re-declaring position knocks the captions out of their
+   bottom-anchored slot. */
+.scene, .ticks, .brand, .captions { z-index: 2; }
+
+/* ── type ────────────────────────────────────────────────── */
+.kicker { color: var(--jasmine); }
+.kicker::before { background: var(--jasmine); }
+
+h1, h2 { color: var(--ink); }
+
+/* the sunset gradient: sun to the ember band under it */
+.grad {
+  background: linear-gradient(105deg, var(--jasmine), var(--ember-lit));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sub { color: var(--teal-lit); }
+
+/* ── cards ───────────────────────────────────────────────── */
+.item,
+.col {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.item { border-left: 5px solid var(--jasmine); }
+.item .dot { background: var(--jasmine); }
+
+.item code {
+  color: var(--jasmine);
+  background: rgba(244, 213, 141, .10);
+  border: 1px solid rgba(244, 213, 141, .22);
+}
+
+/* Numbered steps: solid Jasmine with Prussian ink. The base runs a
+   gradient here under near-black text, which loses contrast the
+   moment the gradient reaches Ember — so this one goes solid. */
+.item--step .num {
+  background: var(--jasmine);
+  color: var(--prussian);
+}
+
+/* ── code: below the waterline ───────────────────────────── */
+.code {
+  background: var(--abyss);
+  border: 1px solid rgba(112, 141, 129, .22);
+  box-shadow: 0 40px 90px -40px #000;
+}
+.code-bar {
+  background: rgba(112, 141, 129, .07);
+  border-bottom: 1px solid rgba(112, 141, 129, .18);
+}
+.code-bar i { background: var(--blood); }
+.code-bar span { color: var(--teal); }
+.code pre { color: var(--ink); }
+
+/* syntax roles, all drawn from the palette */
+.code .c-dim { color: #4E6B62; }            /* Deep Teal, dropped back */
+.code .c-acc { color: var(--jasmine); }     /* prompt  */
+.code .c-key { color: var(--teal-lit); }    /* flag    */
+.code .c-str { color: var(--ember-lit); }   /* string  */
+
+/* ── compare: cool left, lit right ───────────────────────── */
+.col h3 { color: var(--teal-lit); }
+.col li::marker { color: var(--teal); }
+
+.col--good {
+  border-color: rgba(244, 213, 141, .40);
+  background: rgba(244, 213, 141, .07);
+}
+.col--good h3 { color: var(--jasmine); }
+.col--good li::marker { color: var(--jasmine); }
+
+/* ── stat / cta ──────────────────────────────────────────── */
+.stat .big {
+  background: linear-gradient(105deg, var(--jasmine), var(--ember-lit));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat .cap { color: var(--teal-lit); }
+
+/* Solid sun, Prussian ink, ember glow beneath — the gradient the
+   base uses would put dark text on Brick Ember at the far end. */
+.cta-pill {
+  background: var(--jasmine);
+  color: var(--prussian);
+  border: none;
+  box-shadow: 0 18px 50px -18px rgba(191, 6, 3, .75);
+}
+
+/* ── chrome ──────────────────────────────────────────────── */
+.tick { background: rgba(112, 141, 129, .22); }
+.tick i { background: var(--jasmine); }
+.brand { color: var(--teal-lit); }
+.brand .mark { background: var(--jasmine); box-shadow: none; }
+
+/* ── captions ────────────────────────────────────────────── */
+/* Warm white on a Prussian stroke, so the words stay readable over
+   the sun glow and over the near-black code slab alike. */
+.captions {
+  color: var(--ink);
+  -webkit-text-stroke: 8px rgba(0, 20, 39, .92);
+  text-shadow:
+    0 2px 12px rgba(0, 11, 23, 1),
+    0 0 28px rgba(0, 11, 23, .9);
+}
+
+/* ── preview chrome ──────────────────────────────────────── */
+body { background: #00080f; }
+.bar {
+  background: rgba(5, 33, 52, .92);
+  border: 1px solid rgba(112, 141, 129, .28);
+  color: var(--ink);
+}
+.bar button {
+  background: rgba(112, 141, 129, .12);
+  border: 1px solid rgba(112, 141, 129, .28);
+  color: var(--ink);
+}
+.bar button:hover { background: rgba(112, 141, 129, .22); }
+.bar .t { color: var(--teal-lit); }
+
+.gate { background: rgba(0, 20, 39, .86); }
+.gate button { background: var(--jasmine); color: var(--prussian); }

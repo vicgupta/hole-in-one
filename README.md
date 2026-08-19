@@ -9,6 +9,7 @@ A collection of reusable skills, agents, plugins, and configurations for AI-assi
 | [interrogate-me](./.opencode/skills/interrogate-me/) | Complete technical specification interrogation — turns vague ideas into implementation-ready specs via MCQ-driven design tree walking |
 | [deepwrite](./.opencode/skills/deepwrite/) | Generate opinionated white papers from deep research — autonomous web research, source trust scoring, and a persistent knowledge base |
 | [humanize](./.opencode/skills/humanize/) | Remove signs of AI-generated writing using 47 researched patterns, a rapid checklist, and a mechanical pre-pass |
+| [youtube-short-by-topic](./.opencode/skills/youtube-short-by-topic/) | Turn a topic into a finished narrated MP4 — research, script, Edge-TTS voiceover, animated deck, captions. Vertical shorts or landscape explainers |
 
 ## Plugins
 

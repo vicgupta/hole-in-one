@@ -1,0 +1,212 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme — light · warm paper
+
+   Extracted from the hand-authored "Beginner's Guide to OpenCode"
+   deck at the repo root: warm paper page, burnt-orange accent,
+   teal secondary, white cards with a hairline border and a soft
+   two-layer shadow — and a DARK code block on the light page,
+   which is the look's signature move.
+
+   Appended after the format stylesheet, so everything here wins
+   on cascade order without touching the base.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── paper ── */
+  --paper:     #faf9f7;
+  --shell:     #f1efeb;
+  --surface:   #ffffff;
+
+  /* ── ink ── */
+  --lt-ink:    #16181d;
+  --lt-ink-2:  #3d434e;
+  --lt-muted:  #6a7280;
+  --lt-faint:  #9aa1ad;
+
+  /* ── rules ── */
+  --lt-line:   #e6e2dc;
+  --lt-line-2: #d8d3ca;
+
+  /* ── accents ── */
+  --lt-acc:      #c2410c;   /* burnt orange */
+  --lt-acc-soft: #fdf1e9;
+  --lt-acc-line: #f3c7a8;
+  --lt-teal:     #0f766e;
+  --lt-teal-soft:#eaf5f3;
+
+  /* ── the dark code slab ── */
+  --code-bg:   #1c1f26;
+  --code-ink:  #e6e3dd;
+
+  --lt-shadow:    0 1px 2px rgba(20, 22, 28, .04), 0 6px 20px -8px rgba(20, 22, 28, .10);
+  --lt-shadow-lg: 0 2px 4px rgba(20, 22, 28, .04), 0 18px 44px -16px rgba(20, 22, 28, .18);
+
+  /* ── mapped onto the deck's roles ── */
+  --bg:      var(--paper);
+  --bg-2:    var(--shell);
+  --ink:     var(--lt-ink);
+  --ink-dim: var(--lt-muted);
+  --line:    var(--lt-line);
+  --card:    var(--surface);
+  --acc:     var(--lt-acc);
+  --acc-2:   var(--lt-teal);
+}
+
+/* ── stage: full-bleed paper ─────────────────────────────── */
+/* The original renders a rounded paper card floating on a shell
+   background. In video there is nothing to float on, so the paper
+   goes full-bleed and keeps only the grid and the vignette. */
+.stage {
+  background: var(--paper);
+  color: var(--lt-ink);
+}
+
+/* vignette, behind the content */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(92% 68% at 50% 0%, transparent 55%, rgba(20, 22, 28, .05) 100%);
+  pointer-events: none;
+}
+
+/* the paper grid */
+.stage::after {
+  background-image:
+    linear-gradient(var(--lt-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lt-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: .55;
+}
+
+/* z-index ONLY — these are already absolutely positioned by the base
+   sheet, and re-declaring position knocks the captions out of their
+   bottom-anchored slot. */
+.scene, .ticks, .brand, .captions { z-index: 2; }
+
+/* ── type ────────────────────────────────────────────────── */
+.kicker { color: var(--lt-acc); }
+.kicker::before { background: var(--lt-acc); }
+
+h1, h2 { color: var(--lt-ink); letter-spacing: -.03em; }
+
+/* The source deck has no gradient type — accent-coloured words carry
+   the emphasis, so `*stars*` render as solid burnt orange. */
+.grad {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+
+.sub { color: var(--lt-muted); }
+
+/* ── cards ───────────────────────────────────────────────── */
+.item,
+.col {
+  background: var(--surface);
+  border: 1px solid var(--lt-line);
+  box-shadow: var(--lt-shadow);
+  color: var(--lt-ink);
+}
+/* the original uses an icon for hierarchy; these layouts have none,
+   so a hairline accent edge does that job instead */
+.item { border-left: 3px solid var(--lt-acc); }
+
+.item .dot { background: var(--lt-acc); box-shadow: none; }
+
+.item code {
+  color: var(--lt-ink);
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+}
+
+/* numbered steps mirror the source deck's .card-ico */
+.item--step .num {
+  background: var(--lt-acc-soft);
+  border: 1px solid var(--lt-acc-line);
+  color: var(--lt-acc);
+  box-shadow: none;
+}
+
+/* ── the dark code slab ──────────────────────────────────── */
+.code {
+  background: var(--code-bg);
+  border: 1px solid #2a2e37;
+  box-shadow: var(--lt-shadow-lg);
+}
+.code-bar {
+  background: rgba(255, 255, 255, .045);
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+}
+.code-bar i { background: #3a3f4a; }
+.code-bar span { color: #8d95a3; }
+.code pre { color: var(--code-ink); }
+
+/* warm syntax roles, tuned for #1c1f26 */
+.code .c-dim { color: #767e8c; }   /* comment */
+.code .c-acc { color: #f08c50; }   /* prompt  */
+.code .c-key { color: #8fd0c4; }   /* flag    */
+.code .c-str { color: #d9c589; }   /* string  */
+
+/* ── compare: neutral left, teal right ───────────────────── */
+.col h3 { color: var(--lt-muted); }
+.col--good {
+  border-color: #bcdcd6;
+  background: var(--lt-teal-soft);
+}
+.col--good h3 { color: var(--lt-teal); }
+.col li::marker { color: var(--lt-acc); }
+.col--good li::marker { color: var(--lt-teal); }
+
+/* ── stat / cta ──────────────────────────────────────────── */
+.stat .big {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--lt-acc);
+}
+.stat .cap { color: var(--lt-muted); }
+
+.cta-pill {
+  background: var(--lt-acc);
+  color: #fff;
+  border: 1px solid var(--lt-acc);
+  box-shadow: var(--lt-shadow);
+}
+
+/* ── chrome ──────────────────────────────────────────────── */
+.tick { background: var(--lt-line-2); }
+.tick i { background: var(--lt-acc); }
+.brand { color: var(--lt-muted); }
+.brand .mark { background: var(--lt-acc); box-shadow: none; }
+
+/* ── captions ────────────────────────────────────────────── */
+/* Dark ink with a paper-coloured stroke: has to stay legible over
+   the page, over white cards, and over the dark code slab. */
+.captions {
+  color: var(--lt-ink);
+  -webkit-text-stroke: 8px rgba(250, 249, 247, .96);
+  text-shadow:
+    0 2px 10px rgba(250, 249, 247, 1),
+    0 0 26px rgba(250, 249, 247, .95);
+}
+
+/* ── preview chrome ──────────────────────────────────────── */
+body { background: var(--shell); }
+.bar {
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button {
+  background: var(--shell);
+  border: 1px solid var(--lt-line-2);
+  color: var(--lt-ink);
+}
+.bar button:hover { background: var(--lt-line); }
+.bar .t { color: var(--lt-muted); }
+
+.gate { background: rgba(241, 239, 235, .86); }
+.gate button { background: var(--lt-acc); color: #fff; }
