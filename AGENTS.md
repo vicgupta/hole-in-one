@@ -18,6 +18,7 @@ A skill for generating comprehensive technical specifications through structured
 
 - **interrogate-me**: Complete technical specification interrogation with MCQ-driven design tree walking
 - **deepwrite**: Generate opinionated white papers from deep research (web research, source trust scoring, persistent KB)
+- **youtube-keyword-research**: Rank top keywords/models trending on YouTube for any niche (autocomplete API + RSS feeds, recency-windowed)
 
 ## Commands
 
