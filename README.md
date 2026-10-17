@@ -31,6 +31,7 @@ Three specialized agents that work together in a pipeline: **Plan → Code → E
 | [planning-agent](./.opencode/agents/planning-agent.md) | Requirements gathering, specs, PRDs, technical design docs | Read-only (no edits, no shell) |
 | [coding-agent](./.opencode/agents/coding-agent.md) | Production-ready code from specifications | Full access (edit + shell) |
 | [evaluating-agent](./.opencode/agents/evaluating-agent.md) | Code review, security audit, quality assessment | Read-only (no edits, no shell) |
+| [pr-review-agent](./.opencode/agents/pr-review-agent.md) | Pull request merge gate — APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES / BLOCK verdict with evidence | Read-only (no edits, no shell) |
 
 ### Workflow
 
@@ -76,7 +77,8 @@ hole-in-one/
 │   ├── agents/
 │   │   ├── planning-agent.md
 │   │   ├── coding-agent.md
-│   │   └── evaluating-agent.md
+│   │   ├── evaluating-agent.md
+│   │   └── pr-review-agent.md
 │   ├── plugins/
 │   │   ├── token-count.ts
 │   │   └── token-count-tui.tsx

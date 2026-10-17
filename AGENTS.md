@@ -13,6 +13,7 @@ A skill for generating comprehensive technical specifications through structured
 - **planning-agent**: Interview-driven requirements gathering and spec generation
 - **coding-agent**: Production-ready code generation from specifications
 - **evaluating-agent**: Code quality review and security auditing
+- **pr-review-agent**: Pull request merge gate — decides whether a PR should be merged (APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES / BLOCK) with evidence-backed gate checks
 
 ## Skills
 

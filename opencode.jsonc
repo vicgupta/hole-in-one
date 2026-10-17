@@ -27,6 +27,15 @@
         "bash": "deny",
         "skill": { "*": "allow" }
       }
+    },
+    "pr-review-agent": {
+      "mode": "primary",
+      "model": "opencode-go/deepseek-v4-flash",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "skill": { "*": "allow" }
+      }
     }
   }
 }
