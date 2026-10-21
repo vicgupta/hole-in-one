@@ -1,2 +1,6 @@
 # deepwrite project-local knowledge base
 .deepwrite/
+
+# plugin toolchain — dependencies for typechecking, resolved by opencode at runtime
+.opencode/node_modules/
+.opencode/package-lock.json

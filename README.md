@@ -17,11 +17,44 @@ A collection of reusable skills, agents, plugins, and configurations for AI-assi
 
 | Plugin | Description |
 |--------|-------------|
-| [token-count](./.opencode/plugins/) | Per-session token & cost tracking — persists a ledger, logs each model call, shows a TUI sidebar panel with live token usage |
+| [token-count](./.opencode/plugins/token-count/) | Per-session token & cost tracking — persists a ledger, logs each model call, shows a TUI sidebar panel with live token usage |
 
 ### Installing a plugin
 
-Copy the plugin files into the project's `.opencode/plugins/` directory (or `~/.config/opencode/plugins/` for global use). opencode auto-loads every plugin found there. The token-count plugin requires `@opencode-ai/plugin` in `.opencode/package.json`.
+Copy the plugin directory into a `.opencode/plugins/` directory (or `~/.config/opencode/plugins/` for global use). opencode auto-loads every plugin found there. A plugin with both a server and a terminal component uses the standard V2 layout, which `token-count` follows:
+
+```
+.opencode/plugins/token-count/
+├── index.ts   # server plugin — Plugin.define from @opencode/plugin
+└── tui.tsx    # terminal plugin — Plugin.define from @opencode/plugin/tui
+```
+
+Run `npm install` inside `.opencode/` to install `@opencode/plugin`. Server and terminal entrypoints are kept together in one directory; V2 discovers both.
+
+### Options
+
+Plugin options go in `opencode.jsonc` under `plugins`, in the object form:
+
+```jsonc
+{
+  "plugins": [
+    {
+      "package": "./.opencode/plugins/token-count",
+      "options": { "keepCalls": 200, "toast": false, "log": true }
+    }
+  ]
+}
+```
+
+| Option | Default | Applies to | Description |
+|--------|---------|-----------|-------------|
+| `ledgerPath` | `$XDG_DATA_HOME/opencode/token-count.json` | server | Where the session ledger is persisted |
+| `keepCalls` | `200` | server | How many recent records to retain per session |
+| `log` | `true` | server | Print a line per usage update |
+| `maxCalls` | `3` | terminal | How many recent calls the sidebar lists |
+| `toast` | `false` | terminal | Show a session summary toast when a session goes idle |
+
+> **V2 note:** token usage arrives as `session.usage.updated`, which is cumulative per session. Ledger `calls[]` entries are therefore per usage update (each with a best-effort model), not per message — V2 no longer emits a per-message token event.
 
 ## Agents
 
@@ -83,7 +116,6 @@ hole-in-one/
 ├── opencode.jsonc
 ├── .gitignore
 └── .opencode/
-    ├── tui.json
     ├── agents/
     │   ├── planning-agent.md
     │   ├── coding-agent.md
@@ -91,8 +123,11 @@ hole-in-one/
     │   ├── pr-review-agent.md
     │   └── go-minimalism-expert.md
     ├── plugins/
-    │   ├── token-count.ts
-    │   └── token-count-tui.tsx
+    │   └── token-count/
+    │       ├── index.ts
+    │       └── tui.tsx
+    ├── package.json
+    ├── tsconfig.json
     └── skills/
         ├── interrogate-me/
         │   └── SKILL.md
