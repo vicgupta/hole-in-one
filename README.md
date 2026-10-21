@@ -83,6 +83,7 @@ hole-in-one/
 ├── opencode.jsonc
 ├── .gitignore
 └── .opencode/
+    ├── tui.json
     ├── agents/
     │   ├── planning-agent.md
     │   ├── coding-agent.md
