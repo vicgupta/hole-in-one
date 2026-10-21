@@ -1,11 +1,10 @@
 # Hole-In-One
 
-A collection of reusable skills, agents, plugins, and configurations for AI-assisted software development.
+A collection of reusable skills, agents, and configurations for AI-assisted software development.
 
 ## Project Structure
 
 - `.opencode/agents/` - Custom agents (planning, coding, evaluating, pr-review, go-minimalism-expert)
-- `.opencode/plugins/` - Token & cost tracking — server plugin (`index.ts`) plus a TUI sidebar panel (`tui.tsx`), V2 `@opencode/plugin` layout
 - `.opencode/skills/` - One directory per skill, each with a `SKILL.md`
 - `opencode.jsonc` - Agent models and permissions
 
