@@ -29,7 +29,9 @@ Copy the plugin directory into a `.opencode/plugins/` directory (or `~/.config/o
 └── tui.tsx    # terminal plugin — Plugin.define from @opencode/plugin/tui
 ```
 
-Run `npm install` inside `.opencode/` to install `@opencode/plugin`. Server and terminal entrypoints are kept together in one directory; V2 discovers both.
+Run `npm install` inside `.opencode/` before `npx tsc --noEmit`, which typechecks against `@opencode/plugin` — opencode resolves that import itself at runtime, so the install is only needed for the typechecker, not for the plugin to load.
+
+> **Don't run two copies.** If you install this globally *and* work inside a project that also has it, both load and both write the same ledger. Keep one: either the global install, or the per-project copy.
 
 ### Options
 
