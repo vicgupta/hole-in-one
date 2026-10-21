@@ -11,6 +11,7 @@ A collection of reusable skills, agents, plugins, and configurations for AI-assi
 | [humanize](./.opencode/skills/humanize/) | Remove signs of AI-generated writing using 47 researched patterns, a rapid checklist, and a mechanical pre-pass |
 | [youtube-short-by-topic](./.opencode/skills/youtube-short-by-topic/) | Turn a topic into a finished narrated MP4 — research, script, Edge-TTS voiceover, animated deck, captions. Vertical shorts or landscape explainers |
 | [youtube-keyword-research](./.opencode/skills/youtube-keyword-research/) | Rank the top keywords/models trending on YouTube for any niche — autocomplete API + top-channel RSS feeds, recency-windowed, report + content hooks |
+| [create-ant-factory](./.opencode/skills/create-ant-factory/) | Turn labelled GitHub issues into reviewed pull requests — coding agents running in Upstash Box sandboxes, started by GitHub Actions |
 
 ## Plugins
 
@@ -78,31 +79,44 @@ The `opencode.jsonc` file configures the agents for use with [opencode](https://
 ```
 hole-in-one/
 ├── README.md
+├── AGENTS.md
 ├── opencode.jsonc
-├── .opencode/
-│   ├── agents/
-│   │   ├── planning-agent.md
-│   │   ├── coding-agent.md
-│   │   ├── evaluating-agent.md
-│   │   ├── pr-review-agent.md
-│   │   └── go-minimalism-expert.md
-│   ├── plugins/
-│   │   ├── token-count.ts
-│   │   └── token-count-tui.tsx
-│       └── skills/
-│           ├── interrogate-me/SKILL.md
-│           ├── deepwrite/
-│           │   ├── SKILL.md
-│           │   ├── config.json
-│           │   └── scripts/kb.py
-│           ├── humanize/
-│           │   ├── SKILL.md
-│           │   ├── README.md
-│           │   ├── artifacts/
-│           │   └── scripts/humanize.py
-│           └── youtube-keyword-research/
-│               ├── SKILL.md
-│               └── scripts/research.py
+├── .gitignore
+└── .opencode/
+    ├── agents/
+    │   ├── planning-agent.md
+    │   ├── coding-agent.md
+    │   ├── evaluating-agent.md
+    │   ├── pr-review-agent.md
+    │   └── go-minimalism-expert.md
+    ├── plugins/
+    │   ├── token-count.ts
+    │   └── token-count-tui.tsx
+    └── skills/
+        ├── interrogate-me/
+        │   └── SKILL.md
+        ├── deepwrite/
+        │   ├── SKILL.md
+        │   ├── config.json
+        │   └── scripts/kb.py
+        ├── humanize/
+        │   ├── SKILL.md
+        │   ├── README.md
+        │   ├── AGENTS.md
+        │   ├── artifacts/
+        │   └── scripts/humanize.py
+        ├── create-ant-factory/
+        │   ├── SKILL.md
+        │   ├── assets/template/
+        │   └── references/
+        ├── youtube-keyword-research/
+        │   ├── SKILL.md
+        │   └── scripts/research.py
+        └── youtube-short-by-topic/
+            ├── SKILL.md
+            ├── assets/
+            ├── reference/
+            └── scripts/
 ```
 
 ## Adding a Skill
