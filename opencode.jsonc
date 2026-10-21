@@ -36,6 +36,15 @@
         "bash": "deny",
         "skill": { "*": "allow" }
       }
+    },
+    "go-minimalism-expert": {
+      "mode": "all",
+      "model": "opencode-go/kimi-k2.7-code",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "skill": { "*": "allow" }
+      }
     }
   }
 }

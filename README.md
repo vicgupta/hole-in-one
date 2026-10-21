@@ -24,7 +24,7 @@ Copy the plugin files into the project's `.opencode/plugins/` directory (or `~/.
 
 ## Agents
 
-Three specialized agents that work together in a pipeline: **Plan → Code → Evaluate**.
+Three specialized agents work together in a pipeline: **Plan → Code → Evaluate**. Two standalone specialists sit alongside them: **pr-review-agent** (merge gate) and **go-minimalism-expert** (Go minimalism).
 
 | Agent | Purpose | Permissions |
 |-------|---------|-------------|
@@ -32,6 +32,7 @@ Three specialized agents that work together in a pipeline: **Plan → Code → E
 | [coding-agent](./.opencode/agents/coding-agent.md) | Production-ready code from specifications | Full access (edit + shell) |
 | [evaluating-agent](./.opencode/agents/evaluating-agent.md) | Code review, security audit, quality assessment | Read-only (no edits, no shell) |
 | [pr-review-agent](./.opencode/agents/pr-review-agent.md) | Pull request merge gate — APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES / BLOCK verdict with evidence | Read-only (no edits, no shell) |
+| [go-minimalism-expert](./.opencode/agents/go-minimalism-expert.md) | Minimal, idiomatic Go — reviews, refactors, and writes Go with the fewest lines that solve the problem | Full access (edit + shell) |
 
 ### Workflow
 
@@ -62,6 +63,11 @@ The `opencode.jsonc` file configures the agents for use with [opencode](https://
       "mode": "primary",
       "model": "opencode-go/deepseek-v4-flash",
       "permission": { "edit": "deny", "bash": "deny" }
+    },
+    "go-minimalism-expert": {
+      "mode": "all",
+      "model": "opencode-go/kimi-k2.7-code",
+      "permission": { "edit": "allow", "bash": "allow" }
     }
   }
 }
@@ -78,7 +84,8 @@ hole-in-one/
 │   │   ├── planning-agent.md
 │   │   ├── coding-agent.md
 │   │   ├── evaluating-agent.md
-│   │   └── pr-review-agent.md
+│   │   ├── pr-review-agent.md
+│   │   └── go-minimalism-expert.md
 │   ├── plugins/
 │   │   ├── token-count.ts
 │   │   └── token-count-tui.tsx

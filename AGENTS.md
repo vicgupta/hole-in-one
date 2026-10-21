@@ -14,6 +14,7 @@ A skill for generating comprehensive technical specifications through structured
 - **coding-agent**: Production-ready code generation from specifications
 - **evaluating-agent**: Code quality review and security auditing
 - **pr-review-agent**: Pull request merge gate — decides whether a PR should be merged (APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES / BLOCK) with evidence-backed gate checks
+- **go-minimalism-expert**: Minimal, idiomatic Go — reviews, refactors, and writes Go with the fewest lines that solve the problem
 
 ## Skills
 
