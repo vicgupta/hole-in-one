@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@opencode/plugin": ["/System/Volumes/Data/Users/kanika/.config/opencode/node_modules/@opencode-ai/plugin/dist/index.d.ts"],
+      "@opencode/plugin/tui": ["/System/Volumes/Data/Users/kanika/.config/opencode/node_modules/@opencode-ai/plugin/dist/tui.d.ts"],
+      "solid-js": ["/Users/kanika/.cache/opencode/packages/oh-my-openagent@latest/node_modules/solid-js"]
+    },
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
